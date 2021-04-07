@@ -8,22 +8,22 @@ class MyClass
         int x;
         double d;
     public:
-        MyClass(int xx, double dd);
-        MyClass(const MyClass& rhs);
+        MyClass(int a, double b);
         void printdata();
-    };
+};
 
-MyClass::MyClass(int xx, double dd)
-    : x{ xx }, d{ dd }
-{}
+MyClass::MyClass(int a, double b) {
+    this->x = a;
+    this->d = b;
+}
 
 void MyClass::printdata()
 {
-    cout << x << d << endl;
+    cout << x << "" <<  d << endl;
 }
 
 int main() {
-    MyClass c1(1, 2);
+    MyClass c1(1, 2.231);
     MyClass c2 = c1;
     c1.printdata();
     c2.printdata();
