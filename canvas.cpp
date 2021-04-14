@@ -90,7 +90,7 @@ public:
 
 class Canvas {
     private:
-        vector<Shape>list;
+        vector<Shape*>list;
     public:
         void getShape(Shape *s) {
             list.push_back(*s);
