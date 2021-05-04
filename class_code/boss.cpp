@@ -10,6 +10,7 @@ class Employee {
         double salary;
     
     public:
+        Employee(){}
         Employee(string name, double salary) {
             this->name = name;
             this->salary = salary;      
@@ -17,19 +18,27 @@ class Employee {
         double getSalary() {
             return this->salary;
         }
+        virtual ~Employee(){}
     
 };
 
 class Boss: public Employee {
-    protected:
+    private:
         double bonus;
     public:
+        Boss(){}
         Boss(string name, double salary, double bonus): Employee(name, salary) {
             this->bonus = bonus;
         }
+
+        string getName() {
+            return this->name;
+        }
+
         double getBonus() {
             return this->bonus;
         }
+
         double getSalary() {
             return salary + this->bonus;
         }
@@ -37,9 +46,9 @@ class Boss: public Employee {
 
 class Company {
     private:
-        vector<Employee>list;
+        vector<Employee*>list;
     public:
-        void getEmployee(Employee people) {
+        void getPeople(Employee *people) {
             list.push_back(people);
         }
 
@@ -47,29 +56,38 @@ class Company {
             return list.size();
         }
 
-        int getEmployeeSize() {
-            int x = 0;
+        int getBoss() {
+            int boss = 0;
             for (int i=0; i<list.size(); i++) {
-                if ((Boss)list[i].getSalary() > list[i].getSalary()) {
-                    x++;
+                Boss *num = dynamic_cast<Boss*>(list[i]);
+                if (num) {
+                    boss++;
+                    //num->getName();
+                    //num->getSalary();
+                    //num->getBonus()
                 }
             }
-            return x;
+            return boss;
         }
 
-
+        int getEmployee() {
+            return list.size() - getBoss();
+        }
 };
 
 int main() {
-    Employee e1("Trung", 50);
-    Employee e2("Thang", 49);
-    Boss b("Vinh", 200, 100);
+    Employee *e1 = new Employee("Trung", 50);
+    Employee *e2 = new Employee("Thang", 49);
+    Boss *b = new Boss("Vinh", 200, 100);
     Company tdc;
-    tdc.getEmployee(e1);
-    tdc.getEmployee(e2);
-    tdc.getEmployee(b);
-    cout << tdc.getEmployeeSize() << endl;
-
+    tdc.getPeople(e1);
+    tdc.getPeople(e2);
+    tdc.getPeople(b);
+    cout << tdc.getSize() << endl;
+    cout << tdc.getBoss() << endl;
+    cout << tdc.getEmployee() << endl;
+    delete e1;
+    delete e2;
+    delete b;
     return 0;
-
 }
