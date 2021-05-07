@@ -97,8 +97,9 @@ int main() {
     Matrix<int> m1(2, 2);
     Matrix<int> m2(2, 2);
     m1.Post();
+    m1.Get();
     putchar('\n');
     //m1.Transpose();
     m2.Post();
-    //m1.Dot(m2);
+    m1.Dot(m2);
 }
