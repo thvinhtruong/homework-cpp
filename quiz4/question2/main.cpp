@@ -86,30 +86,85 @@ class Triangle: public Shape {
         }
 };
 
+class Canvas {
+    private:
+        vector <Shape*> shape_list;
+        vector <double> area_list;
+    
+    public:
+        Canvas(){}
+        
+        void addShape(Shape *s) {
+            shape_list.push_back(s);
+        }
+
+        void sortArea() {
+            int i;
+            for (i=0; i<shape_list.size(); i++) {
+                area_list.push_back(shape_list[i]->getArea());
+            }
+            sort(area_list.begin(), area_list.end());
+        }
+        
+        void PrintAreaList() {
+            reverse(area_list.begin(), area_list.end());
+            for (int i=0; i<area_list.size(); i++) {
+                cout << area_list[i] << " ";
+            }
+            putchar('\n');
+        }
+
+        int countShape() {
+            return shape_list.size();
+        }
+
+        int countCircle() {
+            int n = 0;
+            for (int i=0; i<shape_list.size(); i++) {
+                Circle *c = dynamic_cast<Circle*>(shape_list[i]);
+                if (c) {
+                    n++;
+                }
+            }
+            return n;
+        }
+
+        int countSquare() {
+            int n = 0;
+            for (int i=0; i<shape_list.size(); i++) {
+                Square *s = dynamic_cast<Square*>(shape_list[i]);
+                if (s) {
+                    n++;
+                }
+            }
+            return n;
+        }
+
+        int countTriangle() {
+            return countShape() - countSquare() - countCircle();
+        }
+};
+
 int main() {
     Shape *c = new Circle(3);
     Shape *sq = new Square(2);
     Shape *t = new Triangle(1, 2);
+    Canvas list;
+
     c->calc_area();
-    c->printA();
     sq->calc_area();
-    sq->printA();
     t->calc_area();
-    t->printA();
-    vector <Shape*> list;
-    vector <double> area_list;
-    list.push_back(c);
-    list.push_back(sq);
-    list.push_back(t);
-    for (int i=0; i<list.size(); i++) {
-        list[i]->draw();
-        area_list.push_back(list[i]->getArea());
-    }
-    sort(area_list.begin(), area_list.end());
-    reverse(area_list.begin(), area_list.end());
-    for (int i=0; i<area_list.size(); i++) {
-        cout << area_list[i] << endl;
-    }
+
+    list.addShape(c);
+    list.addShape(sq);
+    list.addShape(t);
+    list.sortArea();
+    list.PrintAreaList();
+    
+    cout << list.countSquare() << endl;
+    cout << list.countCircle() << endl;
+    cout << list.countTriangle() << endl;
+
     delete c;
     delete sq;
     delete t;

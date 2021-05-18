@@ -14,7 +14,8 @@ class Employee {
             this->name = name;
             this->salary = salary;      
         }
-        double getSalary() {
+        
+        virtual double getSalary() {
             return this->salary;
         }
     
@@ -27,9 +28,11 @@ class Boss: public Employee {
         Boss(string name, double salary, double bonus): Employee(name, salary) {
             this->bonus = bonus;
         }
+
         double getBonus() {
             return this->bonus;
         }
+
         double getSalary() {
             return salary + this->bonus;
         }

@@ -43,6 +43,11 @@ class Library {
         void addBook(Books* bok) {
             b.push_back(bok);
         }
+
+        void addNewspaper(Newspaper* newss) {
+            n.push_back(newss);
+        }
+
         void removeNewspaper(Newspaper* newss) {
             int x = 0;
             for (int i=0; i<n.size(); i++) {

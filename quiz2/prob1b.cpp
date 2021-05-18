@@ -7,110 +7,152 @@ using namespace std;
 class Address {
     private:
         string street;
-        int house_num;
-        string city_name;
+        int house;
+        string city;
     
     public:
-        Address(string street, int house_num, string city_name): street(street), house_num(house_num), city_name(city_name) {}
-        string setStreet(string s) {
-            this->street = s;
+        Address(){}
+        Address(string street, int house, string city): street(street), house(house), city(city) {}
+        
+        string getStreet() {
+            return this->street;
+        }
+
+        int getHouse() {
+            return this->house;
+        }
+
+        string getCity() {
+            return this->city;
+        }
+
+        bool isTheSameStreet(const Address& another) {
+            return (this->street == another.street) ? true: false;
         }
 };
 
 class Pet {
     protected:
         string name;
-        string street;
-        Address a;
     
     public:
-        Pet(){}
-        Pet(string name, string street): name(name) {
-            a.setStreet(street);
-        }
+        Pet(){};
+        Pet(string name): name(name) {}
+        virtual string getName() = 0;
         virtual ~Pet(){}
-        bool operator==(Pet other)
-        {
-            if (other.name!=this->name) return false;
-            return true;
-        }
-
-        string getName() {
-            return this->name;
-        }
-
-        string getStreet() {
-            return this->street;
-        }
 };
 
 class Dog: public Pet {
     public:
-        Dog(string name){
-            this->name = name;
+        Dog(){}
+        Dog(string name): Pet(name) {}
+
+        string getName() {
+            return this->name;
         }
 };
 
 class Cat: public Pet {
     public:
-        Cat(string name) {
-            this->name = name;
+        Cat(){}
+        Cat(string name): Pet(name) {}
+
+        string getName() {
+            return this->name;
         }
 };
 
 class House {
     private:
         Address a;
-        vector<Pet*>list;
+        vector<Pet *> list;
 
     public:
         House(string street, int house, string city): a(street, house, city) {}
 
-        void addDog(Pet *d) {
-            list.push_back(d);
+        void addPet(Pet* p) {
+            list.push_back(p);
         }
 
-        void addCat(Pet *c) {
-            list.push_back(c);
-        }
-
-        void removeDog(Pet *d) {
+        void removeDog(Dog *d) {
+            int x = 0;
             for (int i=0; i<list.size(); i++) {
-                if (this->list[i]->getName()==d->getName()) {
-                    list.erase(list.begin()+i);
+                if (this->list[i]->getName() == d->getName()) {
+                    x+=i;
                 }
             }
+            list.erase(list.begin() + x);
         }
 
-        int getNumberOfPet() {
-            return list.size();
-        }
-
-        int getCountSameStreetDog() {
-            int y;
+        int getNumberOfDog() {
+            int x = 0;
             for (int i=0; i<list.size(); i++) {
-                int x = 0;
-                for (int j=0; j<list.size(); j++) {
-                    if (list[i]->getStreet() == list[j]->getStreet()) {
-                        x++;
-                        if (x > 1) {
-                            y++;
-                        }
-                    } 
+                Dog *d = dynamic_cast <Dog*>(list[i]);
+                if (d) {
+                    x++;
                 }
             }
-            return y;
+            return x;
         }
 
+        int getNumberOfCat() {
+            return list.size() - getNumberOfDog();
+        }
+
+        Address getAddress() {
+            return this->a;
+        }
+
+        bool SameStreetForHouses(House* another) {
+            return (this->a.getStreet() == another->getAddress().getStreet());
+        }        
+};
+
+class House_Management {
+    private:
+        vector <House *> list_of_house;
+
+    public:
+        House_Management(){}
+        void addHouse(House *h) {
+            list_of_house.push_back(h);
+        }
+
+        int count_pets_same_street() {
+            int x = 0;
+            for (int i=0; i<list_of_house.size() - 1; i++) {
+                if (list_of_house[i]->SameStreetForHouses(list_of_house[i+1])) {
+                    int dog_num = list_of_house[i]->getNumberOfDog() + list_of_house[i+1]->getNumberOfDog();
+                    int cat_num = list_of_house[i]->getNumberOfCat() + list_of_house[i+1]->getNumberOfCat();
+                    x += dog_num + cat_num;
+                }
+            }
+            return x;
+        }
 };
 
 int main() {
-    House h("tdc", 123, "Binh Duong");
-    Dog *d = new Dog("David");
-    Cat *c = new Cat("Thang");
-    h.addDog(d);
-    h.addCat(c);
-    cout << h.getNumberOfPet() << endl;
-    delete d;
-    delete c;
+    House *h1 = new House("tdc", 123, "Binh Duong");
+    House *h2 = new House("tdc", 234, "Binh Duong");
+    Pet *d1 = new Dog("david");
+    Pet *d2 = new Dog("trung");
+    Pet *c1 = new Cat("thang");
+    Pet *c2 = new Cat("quang");
+    House_Management hm;
+
+    h1->addPet(d1);
+    h2->addPet(d2);
+    h1->addPet(c1);
+    h2->addPet(c2);
+    hm.addHouse(h1);
+    hm.addHouse(h2);
+
+    cout << hm.count_pets_same_street() << endl;
+    delete h1;
+    delete h2;
+    delete d1;
+    delete d2;
+    delete c1;
+    delete c2;
+    return 0;
 }
