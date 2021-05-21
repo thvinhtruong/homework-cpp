@@ -5,11 +5,16 @@
 using namespace std;
 
 class Member {
-    private:
+    protected:
         string name;
         string address;
+        int fee;
     public:
-        Member(string name, string address): name(name), address(address) {}
+        Member(){}
+        Member(string name, string address): name(name), address(address) {
+            this->fee = 0;
+        }
+        ~Member(){}
         string getName() {
             return this->name;
         }
@@ -21,17 +26,17 @@ class Member {
         virtual int getFee();
 };
 
-class Standard: public Member {
+class Standard_Member: public Member {
     public:
+        Standard_Member(){
+            this->fee = 0;
+        }
         int getFee() {
             return 0;
         }
 };
 
 class Senior: public Member {
-    private:
-        int fee;
-    
     public:
         Senior(int fee): fee(fee) {}
         int getFee() {
@@ -41,7 +46,7 @@ class Senior: public Member {
 
 class Society {
     private:
-        Member m;
+        string name;
     public:
         Society(string name, string address): m(name, address) {}
         virtual void addMember(string name, string address);
